@@ -9,6 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.syftapp.codetest.Navigation
 import com.syftapp.codetest.R
 import com.syftapp.codetest.data.model.domain.Post
+import com.syftapp.codetest.util.isNetworkAvailbale
 import kotlinx.android.synthetic.main.activity_posts.*
 import org.koin.android.ext.android.inject
 import org.koin.core.KoinComponent
@@ -37,7 +38,9 @@ class PostsActivity : AppCompatActivity(), PostsView, KoinComponent {
         nestedScrollView.setOnScrollChangeListener {
                 view: NestedScrollView?, _: Int, scrollY: Int, _: Int, _: Int ->
             if(scrollY == (view?.getChildAt(0)?.measuredHeight?.minus(view.measuredHeight))) {
-                presenter.bind(this, ++pageCounter)
+                if(isNetworkAvailbale(this)) {
+                    presenter.bind(this, ++pageCounter)
+                }
             }
         }
     }

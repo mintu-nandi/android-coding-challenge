@@ -21,6 +21,7 @@ class BlogRepository(
 
     override fun getUsers(): Single<List<User>> {
         return fetchData(
+            page = 1,
             local = { userDao.getAll() },
             remote = { blogApi.getUsers() },
             insert = { value -> userDao.insertAll(*value.toTypedArray()) }
@@ -29,6 +30,7 @@ class BlogRepository(
 
     override fun getComments(): Single<List<Comment>> {
         return fetchData(
+            page = 1,
             local = { commentDao.getAll() },
             remote = { blogApi.getComments() },
             insert = { value -> commentDao.insertAll(*value.toTypedArray()) }
@@ -37,6 +39,7 @@ class BlogRepository(
 
     override fun getPosts(page: Int): Single<List<Post>> {
         return fetchData(
+            page,
             local = { postDao.getAll() },
             remote = { blogApi.getPosts(page) },
             insert = { value -> postDao.insertAll(*value.toTypedArray()) }
@@ -48,19 +51,23 @@ class BlogRepository(
     }
 
     private fun <T> fetchData(
+        page: Int,
         local: () -> Single<List<T>>,
         remote: () -> Single<List<T>>,
         insert: (insertValue: List<T>) -> Completable
     ): Single<List<T>> {
         // Remote service will invoke if value receive from service save in local database
         // and then return all the save records from the local database
-        return remote.invoke().flatMap {
-            if(it.isNotEmpty()) {
-                insert.invoke(it).subscribe()
-            }
-            local.invoke().flatMap { value ->
-                Single.just(value)
-            }
-        }
+       return  local.invoke()
+               .flatMap {
+                   if (it.isNotEmpty() && page < 2) {
+                       Single.just(it)
+                   }
+                   else remote.invoke().map { value ->
+                               insert.invoke(value).subscribe();
+                               value
+                           }
+
+               }
     }
 }

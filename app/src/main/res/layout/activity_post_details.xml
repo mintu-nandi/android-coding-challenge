@@ -11,13 +11,11 @@
         android:id="@+id/postTitle"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="@dimen/defaultPadding"
         style="@style/Title"
-
         tools:text="A sample post title"
         />
 
@@ -25,12 +23,10 @@
         android:id="@+id/postBody"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-
         app:layout_constraintTop_toBottomOf="@id/postTitle"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="@dimen/defaultPadding"
-
         tools:text="A sample post title with really long text that should wrap on to the next line"
         />
 
@@ -56,7 +52,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-
         tools:text="@string/display_post_error_message"
         />
 
